@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>线缆移动OA</title>
+    <script src="js/mui.min.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
+    <link rel="stylesheet" href="css/mui.min.css">
+    <link rel="stylesheet" href="css/my.css">
+	<link rel="stylesheet" href="css/iconfont.css" />
+	<style>
+		
+		
+		.mui-table-view-cell::after{left:1px;}
+		header.mui-bar{
+				display: none;
+			}
+			.mui-bar-nav~.mui-content{
+				padding: 0;
+			}
+	</style>
+	    
+	
+
+   
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon iconfont icon-back mui-pull-left" onclick="back();"></a>
+			<h1 class="mui-title">关于我们</h1>
+	</header>
+	<div class="mui-content">
+		<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a  class="mui-navigate-right" onclick="pclicked('gsjj.html',true,true)">
+						<i class="mui-icon mui-icon-chatbubble"></i>
+						公司简介
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">
+						<i class="mui-icon mui-icon-chatbubble"></i>
+						资质荣誉
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">
+						<i class="mui-icon mui-icon-phone"></i>
+						联系我们
+					</a>
+				</li>
+			</ul>
+	</div>
+	<nav class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item mui-active" href="list.html">
+				<span class="mui-icon iconfont icon-home"></span>
+				
+			</a>
+			
+		</nav>
+	<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script>
+		var preate={};
+function preateWebivew(id){
+	if(!preate[id]){
+		var w=plus.webview.create(id,id,{scrollIndicator:'none',scalable:false,popGesture:'hide'},{preate:true});
+		preate[id]=w;
+		w.addEventListener('close',function(){//页面关闭后可再次打开
+			_openw=null;
+			preate[id]&&(preate[id]=null);//兼容窗口的关闭
+		},false);
+	}
+}
+// 判断预载打开
+var _openw=null;
+function pclicked(id){
+	if(_openw){return;}
+	_openw=preate[id];
+	if(_openw){
+		if(_openw.showded){
+			_openw.show('auto',at);
+		}else{
+			_openw.show('slide-in-right',at);
+			_openw.showded=true;
+		}
+		_openw=null;
+	}else{
+		var wa=plus.nativeUI.showWaiting();
+		_openw=plus.webview.create(id,id,{scrollIndicator:'none',scalable:false},{preate:true});
+		preate[id]=_openw;
+		_openw.addEventListener('loaded',function(){//叶面加载完成后才显示
+			setTimeout(function(){//延后显示避免低端机上闪屏
+			wa.close();
+			_openw.show('slide-in-right',at);
+			_openw.showded=true;
+			_openw=null;
+			},500);
+		},false);
+		_openw.addEventListener('close',function(){//页面关闭后可再次打开
+			_openw=null;
+			preate[id]&&(preate[id]=null);//兼容窗口的关闭
+		},false);
+	}
+}
+// H5 plus事件处理
+var at=200;// 默认动画时间
+function plusReady(){
+	if("iOS"==plus.os.name){
+		at=300;
+	}
+	preateWebivew('webview_animation.html');
+	preateWebivew('webview_pullhead.html');
+}
+if(window.plus){
+	plusReady();
+}else{
+	document.addEventListener('plusready',plusReady,false);
+}
+// 创建悬浮窗口
+var floatw=null;
+function floatWebview(){
+	if(floatw){ // 避免快速多次点击创建多个窗口
+		return;
+	}
+	floatw=plus.webview.create("webview_float.html","webview_float.html",{width:'200px',height:'200px',margin:"auto",background:"rgba(0,0,0,0.8)",scrollIndicator:'none',scalable:false,popGesture:'none'});
+	floatw.addEventListener("loaded",function(){
+		floatw.show('fade-in',300);
+		floatw=null;
+	},false);
+}
+// 创建自定义下拉刷新窗口
+function customeRefresh(){
+	if(plus.os.name!="Android"){
+		 compatibleConfirm();
+	}else{
+		clicked('webview_pullhead_custom.html',true,true);
+	}
+}
+	</script>
+</body>
+</html>
